@@ -5,27 +5,32 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.scoreBoard.model.Match;
 
 public class ScoreBoardServiceTest {
 
+    private ScoreBoardService scoreBoardService;
+
+    @BeforeEach
+    void setUp() {
+        scoreBoardService = new ScoreBoardService();
+    }
+
     @Test
     void shouldInstantiateScoreBoardService() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         assertNotNull(scoreBoardService, "ScoreBoardService instance should have been created");
     }
 
     @Test
     void shouldReturnEmptyMatchesListInitially() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         List<Match> matches = scoreBoardService.getAllMatches();
         assertEquals(0, matches.size(), "Initial matches list should be empty");
     }
 
     @Test
     void shouldAddMatchWhenStartMatchCalled() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Brazil", "Argentina");
 
         List<Match> matches = scoreBoardService.getAllMatches();
@@ -34,7 +39,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldStartMatchWithCorrectTeamNames() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Brazil", "Argentina");
 
         List<Match> matches = scoreBoardService.getAllMatches();
@@ -46,7 +50,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectNullHomeTeamName() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch(null, "Canada"));
         assertEquals("Team name cannot be null or empty", exception.getMessage());
@@ -54,7 +57,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectEmptyHomeTeamName() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("", "Canada"));
         assertEquals("Team name cannot be null or empty", exception.getMessage());
@@ -62,7 +64,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectNullAwayTeamName() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("Canada", null));
         assertEquals("Team name cannot be null or empty", exception.getMessage());
@@ -70,7 +71,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectEmptyAwayTeamName() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("Canada", ""));
         assertEquals("Team name cannot be null or empty", exception.getMessage());
@@ -78,7 +78,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectSameTeamNames() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("Canada", "Canada"));
         assertEquals("Team names cannot be same", exception.getMessage());
@@ -86,7 +85,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectSameTeamNamesIgnoringCase() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("Canada", "canada"));
         assertEquals("Team names cannot be same", exception.getMessage());
@@ -94,7 +92,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectIfHomeTeamHasActiveMatch() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Brazil", "Argentina");
         
          IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -105,7 +102,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectIfThereIsSameMatch() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Brazil", "Canada");
         
          IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -116,7 +112,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectStartWhenHomeTeamAlreadyPlaying() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Turkey", "Canada");
         
          IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -127,7 +122,6 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldRejectStartWhenAwayTeamHasActiveMatch() {
-        ScoreBoardService scoreBoardService = new ScoreBoardService();
         scoreBoardService.startMatch("Turkey", "Canada");
         
          IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
