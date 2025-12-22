@@ -91,4 +91,48 @@ public class ScoreBoardServiceTest {
             () -> scoreBoardService.startMatch("Canada", "canada"));
         assertEquals("Team names cannot be same", exception.getMessage());
     }
+
+    @Test
+    void shouldRejectIfHomeTeamHasActiveMatch() {
+        ScoreBoardService scoreBoardService = new ScoreBoardService();
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch("Brazil", "Canada"));
+
+        assertEquals("Team Brazil already has an active match", exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectIfThereIsSameMatch() {
+        ScoreBoardService scoreBoardService = new ScoreBoardService();
+        scoreBoardService.startMatch("Brazil", "Canada");
+        
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch("Brazil", "Canada"));
+
+        assertEquals("Team Brazil already has an active match", exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectStartWhenHomeTeamAlreadyPlaying() {
+        ScoreBoardService scoreBoardService = new ScoreBoardService();
+        scoreBoardService.startMatch("Turkey", "Canada");
+        
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch("Brazil", "Turkey"));
+
+        assertEquals("Team Turkey already has an active match", exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectStartWhenAwayTeamHasActiveMatch() {
+        ScoreBoardService scoreBoardService = new ScoreBoardService();
+        scoreBoardService.startMatch("Turkey", "Canada");
+        
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch("Canada", "Brazil"));
+
+        assertEquals("Team Canada already has an active match", exception.getMessage());
+    }
 }

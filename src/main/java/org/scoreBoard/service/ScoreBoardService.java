@@ -21,6 +21,16 @@ public class ScoreBoardService {
             throw new IllegalArgumentException("Team names cannot be same");
         }
 
+        for (Match match : matches) {
+            if (homeTeam.equals(match.getHomeTeam()) || homeTeam.equals(match.getAwayTeam())) {
+                throw new IllegalArgumentException("Team " + homeTeam  + " already has an active match");
+            }
+
+            if (awayTeam.equals(match.getHomeTeam()) || awayTeam.equals(match.getAwayTeam())) {
+                throw new IllegalArgumentException("Team " + awayTeam  + " already has an active match");
+            }
+        }
+
         Match match = new Match(homeTeam, awayTeam);
         matches.add(match);
     }
