@@ -129,4 +129,48 @@ public class ScoreBoardServiceTest {
 
         assertEquals("Team Canada already has an active match", exception.getMessage());
     }
+
+    @Test
+    void shouldUpdateMatchScores() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.updateScore("Brazil", "Argentina", 2, 3);
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
+        assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
+    }
+
+    @Test
+    void shouldUpdateMultipleMatchScores() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.updateScore("Brazil", "Argentina", 2, 3);
+        scoreBoardService.startMatch("Turkey", "Canada");
+        scoreBoardService.updateScore("Turkey", "Canada", 1, 1);
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
+        assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
+        assertEquals(1, matches.get(1).getHomeScore(), "Home team score should be updated to 1");
+        assertEquals(1, matches.get(1).getAwayScore(), "Away team score should be updated to 1");
+    }
+
+    @Test
+    void shouldUpdateHomeScoreIgnoringCase() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.updateScore("brazil", "Argentina", 2, 3);
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
+        assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
+    }
+
+    @Test
+    void shouldUpdateAwayScoreIgnoringCase() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.updateScore("Brazil", "argentina", 2, 3);
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
+        assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
+    }
 }

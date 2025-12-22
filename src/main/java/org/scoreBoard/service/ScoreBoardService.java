@@ -34,4 +34,14 @@ public class ScoreBoardService {
         Match match = new Match(homeTeam, awayTeam);
         matches.add(match);
     }
+
+    public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+        for (int i = 0; i < matches.size(); i++) {
+            if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
+                awayTeam.equalsIgnoreCase(matches.get(i).getAwayTeam())) {
+                    matches.set(i, new Match(homeTeam, awayTeam, homeScore, awayScore));
+                return;
+            }
+        }
+    }
 }
