@@ -193,4 +193,30 @@ public class ScoreBoardServiceTest {
         assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
         assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
     }
+
+    @Test
+    void shouldNotUpdateNonExistingMatch() {
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> scoreBoardService.updateScore("Canada", "Brazil", 1, 1));
+
+        assertEquals("Match between Canada and Brazil not found", exception.getMessage());
+    }
+
+    @Test
+    void shouldNotUpdateWithNegativeHomeScore() {
+        scoreBoardService.startMatch("Canada", "Brazil");
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.updateScore("Canada", "Brazil", -1, 1));
+
+        assertEquals("Scores cannot be negative", exception.getMessage());
+    }
+
+    @Test
+    void shouldNotUpdateWithNegativeAwayScore() {
+        scoreBoardService.startMatch("Canada", "Brazil");
+         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.updateScore("Canada", "Brazil", 1, -1));
+
+        assertEquals("Scores cannot be negative", exception.getMessage());
+    }
 }

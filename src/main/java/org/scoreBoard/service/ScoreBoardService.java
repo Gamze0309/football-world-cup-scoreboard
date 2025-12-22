@@ -36,6 +36,10 @@ public class ScoreBoardService {
     }
 
     public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+        if (homeScore < 0 || awayScore < 0) {
+            throw new IllegalArgumentException("Scores cannot be negative");
+        }
+        
         for (int i = 0; i < matches.size(); i++) {
             if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
                 awayTeam.equalsIgnoreCase(matches.get(i).getAwayTeam())) {
@@ -43,5 +47,7 @@ public class ScoreBoardService {
                 return;
             }
         }
+
+        throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
     }
 }
