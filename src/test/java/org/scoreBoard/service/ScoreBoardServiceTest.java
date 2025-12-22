@@ -219,4 +219,54 @@ public class ScoreBoardServiceTest {
 
         assertEquals("Scores cannot be negative", exception.getMessage());
     }
+
+    @Test
+    void shouldFinishMatch() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.finishMatch("Brazil", "Argentina");
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(0, matches.size(), "Matches list should be empty after finishing the match");
+    }
+
+    @Test
+    void shouldFinishOneMatchAndKeepOtherActive() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.startMatch("Turkey", "Canada");
+        scoreBoardService.finishMatch("Turkey", "Canada");
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(1, matches.size(), "Matches list should contain one match after finishing one match");
+        assertEquals("Brazil", matches.get(0).getHomeTeam(), "Remaining match should be Brazil vs Argentina");
+        assertEquals("Argentina", matches.get(0).getAwayTeam(), "Remaining match should be Brazil vs Argentina");
+    }
+
+    @Test
+    void shoouldFinishMatchIgnoringCase() {
+        scoreBoardService.startMatch("Brazil", "Argentina");
+        scoreBoardService.finishMatch("brazil", "argentina");
+
+        List<Match> matches = scoreBoardService.getAllMatches();
+        assertEquals(0, matches.size(), "Matches list should be empty after finishing the match");
+    }
+
+    @Test
+    void shouldNotFinishNonExistingMatch() {
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> scoreBoardService.finishMatch("Brazil", "Turkey"));
+
+        assertEquals("Match between Brazil and Turkey not found", exception.getMessage());
+    }
+
+    @Test
+    void shouldNotFinishSameMatchTwice() {
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.finishMatch("Mexico", "Canada");
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            scoreBoardService.finishMatch("Mexico", "Canada");
+        });
+
+        assertEquals("Match between Mexico and Canada not found", exception.getMessage());
+    }
 }

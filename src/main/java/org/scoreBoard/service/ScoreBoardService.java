@@ -50,4 +50,15 @@ public class ScoreBoardService {
 
         throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
     }
+
+    public void finishMatch(String homeTeam, String awayTeam) {
+        for (int i = 0; i < matches.size(); i++) {
+            if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
+                awayTeam.equalsIgnoreCase(matches.get(i).getAwayTeam())) {
+                    matches.remove(i);
+                    return;
+            }
+        }
+        throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
+    }
 }
