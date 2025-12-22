@@ -13,6 +13,14 @@ public class ScoreBoardService {
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
+        if (homeTeam == null || homeTeam.isEmpty() || awayTeam == null || awayTeam.isEmpty()) {
+            throw new IllegalArgumentException("Team name cannot be null or empty");
+        }
+
+        if (homeTeam.equalsIgnoreCase(awayTeam)) {
+            throw new IllegalArgumentException("Team names cannot be same");
+        }
+
         Match match = new Match(homeTeam, awayTeam);
         matches.add(match);
     }
