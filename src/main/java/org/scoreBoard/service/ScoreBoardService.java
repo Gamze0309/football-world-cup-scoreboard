@@ -22,11 +22,11 @@ public class ScoreBoardService {
         }
 
         for (Match match : matches) {
-            if (homeTeam.equals(match.getHomeTeam()) || homeTeam.equals(match.getAwayTeam())) {
+            if (homeTeam.equalsIgnoreCase(match.getHomeTeam()) || homeTeam.equalsIgnoreCase(match.getAwayTeam())) {
                 throw new IllegalArgumentException("Team " + homeTeam  + " already has an active match");
             }
 
-            if (awayTeam.equals(match.getHomeTeam()) || awayTeam.equals(match.getAwayTeam())) {
+            if (awayTeam.equalsIgnoreCase(match.getHomeTeam()) || awayTeam.equalsIgnoreCase(match.getAwayTeam())) {
                 throw new IllegalArgumentException("Team " + awayTeam  + " already has an active match");
             }
         }
