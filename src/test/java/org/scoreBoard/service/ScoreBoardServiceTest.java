@@ -287,4 +287,13 @@ public class ScoreBoardServiceTest {
 
         assertEquals("Match between Mexico and Canada not found", exception.getMessage());
     }
+
+    @Test
+    void shouldReturnUnmodifiableMatchesList() {
+        List<Match> result = scoreBoardService.getAllMatches();
+        UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class,
+            () -> result.add(new Match("Brazil", "Argentina")));
+    
+        assertNotNull(ex, "Should throw UnsupportedOperationException when trying to modify the matches list");
+    }
 }

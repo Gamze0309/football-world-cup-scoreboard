@@ -10,7 +10,7 @@ public class InMemoryScoreBoardRepository implements ScoreBoardRepository {
 
     @Override
     public List<Match> getAllMatches() {
-        return matches;
+        return List.copyOf(matches);
     }
 
     @Override
