@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.scoreBoard.model.Match;
 import org.scoreBoard.util.MatchValidator;
+import org.scoreBoard.util.ScoreValidator;
 import org.scoreBoard.util.TeamNameValidator;
 
 public class ScoreBoardService {
@@ -23,9 +24,7 @@ public class ScoreBoardService {
     }
 
     public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
-        if (homeScore < 0 || awayScore < 0) {
-            throw new IllegalArgumentException("Scores cannot be negative");
-        }
+        ScoreValidator.validateScores(homeScore, awayScore);
         
         for (int i = 0; i < matches.size(); i++) {
             if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
