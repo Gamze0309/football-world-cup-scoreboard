@@ -1,50 +1,47 @@
 package org.scoreBoard.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.scoreBoard.model.Match;
+import org.scoreBoard.repository.ScoreBoardRepository;
 import org.scoreBoard.util.MatchValidator;
 import org.scoreBoard.util.ScoreValidator;
 import org.scoreBoard.util.TeamNameValidator;
 
 public class ScoreBoardService {
-    List<Match> matches = new ArrayList<>();
+    
+    private final ScoreBoardRepository scoreBoardRepository;
+
+    public ScoreBoardService(ScoreBoardRepository scoreBoardRepository) {
+        this.scoreBoardRepository = scoreBoardRepository;
+    }
     
     public List<Match> getAllMatches() {
-        return matches;
+        return scoreBoardRepository.getAllMatches();
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
         TeamNameValidator.validateTeamName(homeTeam, awayTeam);
-        MatchValidator.validateTeamHasNoActiveMatch(homeTeam, awayTeam, matches);
 
-        Match match = new Match(homeTeam, awayTeam);
-        matches.add(match);
+        List<Match> activeMatches = scoreBoardRepository.getAllMatches();
+        MatchValidator.validateTeamHasNoActiveMatch(homeTeam, awayTeam, activeMatches);
+
+        scoreBoardRepository.startMatch(homeTeam, awayTeam);
     }
 
     public void updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
         ScoreValidator.validateScores(homeScore, awayScore);
         
-        for (int i = 0; i < matches.size(); i++) {
-            if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
-                awayTeam.equalsIgnoreCase(matches.get(i).getAwayTeam())) {
-                    matches.set(i, new Match(homeTeam, awayTeam, homeScore, awayScore));
-                return;
-            }
+        boolean updated = scoreBoardRepository.updateScore(homeTeam, awayTeam, homeScore, awayScore);
+        if (!updated) {
+            throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
         }
-
-        throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
     }
 
     public void finishMatch(String homeTeam, String awayTeam) {
-        for (int i = 0; i < matches.size(); i++) {
-            if (homeTeam.equalsIgnoreCase(matches.get(i).getHomeTeam()) &&
-                awayTeam.equalsIgnoreCase(matches.get(i).getAwayTeam())) {
-                    matches.remove(i);
-                    return;
-            }
+        boolean finished = scoreBoardRepository.finishMatch(homeTeam, awayTeam);
+        if (!finished) {
+            throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
         }
-        throw new IllegalStateException("Match between " + homeTeam + " and " + awayTeam + " not found");
     }
 }

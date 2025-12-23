@@ -8,14 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.scoreBoard.model.Match;
+import org.scoreBoard.repository.InMemoryScoreBoardRepository;
+import org.scoreBoard.repository.ScoreBoardRepository;
 
 public class ScoreBoardServiceTest {
 
     private ScoreBoardService scoreBoardService;
+    private ScoreBoardRepository scoreBoardRepository;
 
     @BeforeEach
     void setUp() {
-        scoreBoardService = new ScoreBoardService();
+        scoreBoardRepository = new InMemoryScoreBoardRepository();
+        scoreBoardService = new ScoreBoardService(scoreBoardRepository);
     }
 
     @Test
