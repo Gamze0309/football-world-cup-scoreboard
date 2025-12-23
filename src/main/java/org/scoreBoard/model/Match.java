@@ -3,19 +3,22 @@ package org.scoreBoard.model;
 public class Match {
     private final String homeTeam;
     private final String awayTeam;
-    private int homeScore;
-    private int awayScore;
+    private final int homeScore;
+    private final int awayScore;
 
     public Match(String homeTeam, String awayTeam) {
-        this.homeTeam = homeTeam;
-        this.awayTeam = awayTeam;
+        this(homeTeam, awayTeam, 0, 0);
     }
 
-    public Match(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+    private Match(String homeTeam, String awayTeam, int homeScore, int awayScore) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeScore = homeScore;
         this.awayScore = awayScore;
+    }
+
+    public Match updateScore(int homeScore, int awayScore) {
+        return new Match(homeTeam, awayTeam, homeScore, awayScore);
     }
 
     public String getHomeTeam() {

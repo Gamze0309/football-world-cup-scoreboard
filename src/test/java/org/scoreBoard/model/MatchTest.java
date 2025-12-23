@@ -26,4 +26,16 @@ public class MatchTest {
         assertEquals(0, match.getHomeScore());
         assertEquals(0, match.getAwayScore());
     }
+
+    @Test
+    void shouldPreserveOriginalAfterUpdateScore() {
+        Match match = new Match("Mexico", "Canada");
+        Match updated = match.updateScore(1, 2);
+
+        assertEquals(1, updated.getHomeScore());
+        assertEquals(2, updated.getAwayScore());
+
+        assertEquals(0, match.getHomeScore());
+        assertEquals(0, match.getAwayScore());
+    }
 }
