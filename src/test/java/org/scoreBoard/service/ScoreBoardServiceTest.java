@@ -77,6 +77,20 @@ public class ScoreBoardServiceTest {
     }
 
     @Test
+    void shouldRejectWhitespaceOnlyHomeTeamName() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch(" ", "Canada"));
+        assertEquals("Team name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectWhitespaceOnlyAwayTeamName() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> scoreBoardService.startMatch("Canada", " "));
+        assertEquals("Team name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
     void shouldRejectSameTeamNames() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
             () -> scoreBoardService.startMatch("Canada", "Canada"));

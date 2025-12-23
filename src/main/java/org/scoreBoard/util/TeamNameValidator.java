@@ -9,7 +9,7 @@ public class TeamNameValidator {
     }
 
     private static void validateTeamNameNotNullOrEmpty(String teamName) {
-        if (teamName == null || teamName.isEmpty()) {
+        if (teamName == null || teamName.trim().isEmpty()) {
             throw new IllegalArgumentException("Team name cannot be null or empty");
         }
     }
