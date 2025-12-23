@@ -7,6 +7,7 @@ import org.scoreBoard.model.Match;
 
 public class InMemoryScoreBoardRepository implements ScoreBoardRepository {
     List<Match> matches = new ArrayList<>();
+    private long insertionCounter = 0;
 
     @Override
     public List<Match> getAllMatches() {
@@ -15,7 +16,7 @@ public class InMemoryScoreBoardRepository implements ScoreBoardRepository {
 
     @Override
     public void startMatch(String homeTeam, String awayTeam) {
-        Match match = new Match(homeTeam, awayTeam);
+        Match match = new Match(homeTeam, awayTeam, insertionCounter++);
         matches.add(match);
     }
 

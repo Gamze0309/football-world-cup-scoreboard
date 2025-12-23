@@ -328,4 +328,30 @@ public class ScoreBoardServiceTest {
         assertEquals("Mexico", summary.get(1).getHomeTeam());
         assertEquals("Germany", summary.get(2).getHomeTeam());
     }
+
+    @Test
+    void shouldPreserveInsertionOrderAfterUpdate() {
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.startMatch("Spain", "Brazil");
+
+        List<Match> beforeUpdateSummary = scoreBoardService.getAllMatchesSummary();
+
+        Match mexicoCanadaBefore = beforeUpdateSummary.stream()
+        .filter(m -> m.getHomeTeam().equals("Mexico") && m.getAwayTeam().equals("Canada"))
+        .findFirst()
+        .orElseThrow();
+
+        long insertionOrderBefore = mexicoCanadaBefore.getInsertionOrder();
+
+        scoreBoardService.updateScore("Mexico", "Canada", 2, 2);
+        scoreBoardService.updateScore("Spain", "Brazil", 1, 5);
+
+        List<Match> afterUpdateSummary = scoreBoardService.getAllMatchesSummary();
+        Match mexicoCanadaAfter = afterUpdateSummary.stream()
+        .filter(m -> m.getHomeTeam().equals("Mexico") && m.getAwayTeam().equals("Canada"))
+        .findFirst()
+        .orElseThrow();
+
+        assertEquals(insertionOrderBefore, mexicoCanadaAfter.getInsertionOrder(), "InsertionOrder must not change after score updates");
+    }
 }
