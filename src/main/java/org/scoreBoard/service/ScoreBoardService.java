@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.scoreBoard.model.Match;
+import org.scoreBoard.util.MatchValidator;
 import org.scoreBoard.util.TeamNameValidator;
 
 public class ScoreBoardService {
@@ -15,16 +16,7 @@ public class ScoreBoardService {
 
     public void startMatch(String homeTeam, String awayTeam) {
         TeamNameValidator.validateTeamName(homeTeam, awayTeam);
-
-        for (Match match : matches) {
-            if (homeTeam.equalsIgnoreCase(match.getHomeTeam()) || homeTeam.equalsIgnoreCase(match.getAwayTeam())) {
-                throw new IllegalArgumentException("Team " + homeTeam  + " already has an active match");
-            }
-
-            if (awayTeam.equalsIgnoreCase(match.getHomeTeam()) || awayTeam.equalsIgnoreCase(match.getAwayTeam())) {
-                throw new IllegalArgumentException("Team " + awayTeam  + " already has an active match");
-            }
-        }
+        MatchValidator.validateTeamHasNoActiveMatch(homeTeam, awayTeam, matches);
 
         Match match = new Match(homeTeam, awayTeam);
         matches.add(match);

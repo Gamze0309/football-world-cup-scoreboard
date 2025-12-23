@@ -108,7 +108,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectIfHomeTeamHasActiveMatch() {
         scoreBoardService.startMatch("Brazil", "Argentina");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("Brazil", "Canada"));
 
         assertEquals("Team Brazil already has an active match", exception.getMessage());
@@ -118,7 +118,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectIfThereIsSameMatch() {
         scoreBoardService.startMatch("Brazil", "Canada");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("Brazil", "Canada"));
 
         assertEquals("Team Brazil already has an active match", exception.getMessage());
@@ -128,7 +128,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectStartWhenHomeTeamAlreadyPlaying() {
         scoreBoardService.startMatch("Turkey", "Canada");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("Brazil", "Turkey"));
 
         assertEquals("Team Turkey already has an active match", exception.getMessage());
@@ -138,7 +138,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectStartWhenAwayTeamHasActiveMatch() {
         scoreBoardService.startMatch("Turkey", "Canada");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("Canada", "Brazil"));
 
         assertEquals("Team Canada already has an active match", exception.getMessage());
@@ -148,7 +148,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectIfHomeTeamHasActiveMatchIgnoringCase() {
         scoreBoardService.startMatch("Turkey", "brazil");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("Brazil", "Canada"));
 
         assertEquals("Team Brazil already has an active match", exception.getMessage());
@@ -158,7 +158,7 @@ public class ScoreBoardServiceTest {
     void shouldRejectIfAwayTeamHasActiveMatchIgnoringCase() {
         scoreBoardService.startMatch("Turkey", "Canada");
         
-         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> scoreBoardService.startMatch("canada", "Brazil"));
 
         assertEquals("Team canada already has an active match", exception.getMessage());
