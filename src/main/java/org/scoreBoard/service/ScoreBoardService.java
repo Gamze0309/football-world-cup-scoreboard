@@ -2,6 +2,7 @@ package org.scoreBoard.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.scoreBoard.model.Match;
@@ -21,11 +22,12 @@ public class ScoreBoardService {
     public List<Match> getAllMatchesSummary() {
         List<Match> matches = new ArrayList<>(scoreBoardRepository.getAllMatches());
 
-        matches.sort((m1, m2) -> {
-            int totalScore1 = m1.getHomeScore() + m1.getAwayScore();
-            int totalScore2 = m2.getHomeScore() + m2.getAwayScore();
-            return Integer.compare(totalScore2, totalScore1);
-        });
+        matches.sort(
+            Comparator
+                .comparingInt((Match m) -> m.getHomeScore() + m.getAwayScore())
+                .reversed()
+                .thenComparing(Match::getInsertionOrder, Comparator.reverseOrder())
+        );
 
         return Collections.unmodifiableList(matches);
     }

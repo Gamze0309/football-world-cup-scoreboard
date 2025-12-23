@@ -354,4 +354,44 @@ public class ScoreBoardServiceTest {
 
         assertEquals(insertionOrderBefore, mexicoCanadaAfter.getInsertionOrder(), "InsertionOrder must not change after score updates");
     }
+
+    @Test
+    void shouldGetSortedSummaryWithSameTotalScores() {
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.startMatch("Spain", "Brazil");
+        scoreBoardService.startMatch("Germany", "France");
+
+        scoreBoardService.updateScore("Mexico", "Canada", 3, 3);
+        scoreBoardService.updateScore("Spain", "Brazil", 4, 2);
+        scoreBoardService.updateScore("Germany", "France", 5, 1);
+
+        List<Match> summary = scoreBoardService.getAllMatchesSummary();
+
+        assertEquals("Germany", summary.get(0).getHomeTeam());
+        assertEquals("Spain", summary.get(1).getHomeTeam());
+        assertEquals("Mexico", summary.get(2).getHomeTeam());
+    }
+
+    @Test
+    void shouldSortSummaryByTotalScoreThenInsertionOrder() {
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.startMatch("Spain", "Brazil");
+        scoreBoardService.startMatch("Germany", "France");
+        scoreBoardService.startMatch("Uruguay", "Italy");
+        scoreBoardService.startMatch("Argentina", "Australia");
+
+        scoreBoardService.updateScore("Mexico", "Canada", 0, 5);
+        scoreBoardService.updateScore("Spain", "Brazil", 10, 2);
+        scoreBoardService.updateScore("Germany", "France", 2, 2);
+        scoreBoardService.updateScore("Uruguay", "Italy", 6, 6);
+        scoreBoardService.updateScore("Argentina", "Australia", 3, 1);
+
+        List<Match> summary = scoreBoardService.getAllMatchesSummary();
+
+        assertEquals("Uruguay", summary.get(0).getHomeTeam());
+        assertEquals("Spain", summary.get(1).getHomeTeam());
+        assertEquals("Mexico", summary.get(2).getHomeTeam());
+        assertEquals("Argentina", summary.get(3).getHomeTeam());
+        assertEquals("Germany", summary.get(4).getHomeTeam());
+    }
 }
