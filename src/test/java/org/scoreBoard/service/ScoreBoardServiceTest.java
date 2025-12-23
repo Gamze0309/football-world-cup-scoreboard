@@ -29,7 +29,7 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldReturnEmptyMatchesListInitially() {
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(0, matches.size(), "Initial matches list should be empty");
     }
 
@@ -37,7 +37,7 @@ public class ScoreBoardServiceTest {
     void shouldAddMatchWhenStartMatchCalled() {
         scoreBoardService.startMatch("Brazil", "Argentina");
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(1, matches.size(), "Matches list should contain one match after addition");
     }
 
@@ -45,7 +45,7 @@ public class ScoreBoardServiceTest {
     void shouldStartMatchWithCorrectTeamNames() {
         scoreBoardService.startMatch("Brazil", "Argentina");
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         Match match = matches.get(0);
 
         assertEquals("Brazil", match.getHomeTeam(), "Home team name should be 'Brazil'");
@@ -173,7 +173,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Brazil", "Argentina");
         scoreBoardService.updateScore("Brazil", "Argentina", 2, 3);
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
         assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
     }
@@ -185,7 +185,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Turkey", "Canada");
         scoreBoardService.updateScore("Turkey", "Canada", 1, 1);
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
         assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
         assertEquals(1, matches.get(1).getHomeScore(), "Home team score should be updated to 1");
@@ -197,7 +197,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Brazil", "Argentina");
         scoreBoardService.updateScore("brazil", "Argentina", 2, 3);
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
         assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
     }
@@ -207,7 +207,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Brazil", "Argentina");
         scoreBoardService.updateScore("Brazil", "argentina", 2, 3);
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(2, matches.get(0).getHomeScore(), "Home team score should be updated to 2");
         assertEquals(3, matches.get(0).getAwayScore(), "Away team score should be updated to 3");
     }
@@ -243,7 +243,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Brazil", "Argentina");
         scoreBoardService.finishMatch("Brazil", "Argentina");
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(0, matches.size(), "Matches list should be empty after finishing the match");
     }
 
@@ -253,7 +253,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Turkey", "Canada");
         scoreBoardService.finishMatch("Turkey", "Canada");
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(1, matches.size(), "Matches list should contain one match after finishing one match");
         assertEquals("Brazil", matches.get(0).getHomeTeam(), "Remaining match should be Brazil vs Argentina");
         assertEquals("Argentina", matches.get(0).getAwayTeam(), "Remaining match should be Brazil vs Argentina");
@@ -264,7 +264,7 @@ public class ScoreBoardServiceTest {
         scoreBoardService.startMatch("Brazil", "Argentina");
         scoreBoardService.finishMatch("brazil", "argentina");
 
-        List<Match> matches = scoreBoardService.getAllMatches();
+        List<Match> matches = scoreBoardService.getAllMatchesSummary();
         assertEquals(0, matches.size(), "Matches list should be empty after finishing the match");
     }
 
@@ -290,10 +290,42 @@ public class ScoreBoardServiceTest {
 
     @Test
     void shouldReturnUnmodifiableMatchesList() {
-        List<Match> result = scoreBoardService.getAllMatches();
+        List<Match> result = scoreBoardService.getAllMatchesSummary();
         UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class,
             () -> result.add(new Match("Brazil", "Argentina")));
     
         assertNotNull(ex, "Should throw UnsupportedOperationException when trying to modify the matches list");
+    }
+
+    @Test
+    void shouldReturnMatchesSortedByTotalScoreDescending() {
+        scoreBoardService.startMatch("Germany", "France");
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.startMatch("Spain", "Brazil");
+
+        scoreBoardService.updateScore("Mexico", "Canada", 0, 5);
+        scoreBoardService.updateScore("Spain", "Brazil", 10, 2);
+        scoreBoardService.updateScore("Germany", "France", 2, 2);
+
+        List<Match> summary = scoreBoardService.getAllMatchesSummary();
+        assertEquals("Spain", summary.get(0).getHomeTeam());
+        assertEquals("Mexico", summary.get(1).getHomeTeam());
+        assertEquals("Germany", summary.get(2).getHomeTeam());
+    }
+
+    @Test
+    void shouldGetSortedSummaryByTotalScore() {
+        scoreBoardService.startMatch("Mexico", "Canada");
+        scoreBoardService.startMatch("Spain", "Brazil");
+        scoreBoardService.startMatch("Germany", "France");
+        
+        scoreBoardService.updateScore("Mexico", "Canada", 2, 5);
+        scoreBoardService.updateScore("Spain", "Brazil", 10, 3);
+        scoreBoardService.updateScore("Germany", "France", 2, 4);
+
+        List<Match> summary = scoreBoardService.getAllMatchesSummary();
+        assertEquals("Spain", summary.get(0).getHomeTeam());
+        assertEquals("Mexico", summary.get(1).getHomeTeam());
+        assertEquals("Germany", summary.get(2).getHomeTeam());
     }
 }

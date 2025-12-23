@@ -1,5 +1,7 @@
 package org.scoreBoard.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.scoreBoard.model.Match;
@@ -16,8 +18,16 @@ public class ScoreBoardService {
         this.scoreBoardRepository = scoreBoardRepository;
     }
     
-    public List<Match> getAllMatches() {
-        return scoreBoardRepository.getAllMatches();
+    public List<Match> getAllMatchesSummary() {
+        List<Match> matches = new ArrayList<>(scoreBoardRepository.getAllMatches());
+
+        matches.sort((m1, m2) -> {
+            int totalScore1 = m1.getHomeScore() + m1.getAwayScore();
+            int totalScore2 = m2.getHomeScore() + m2.getAwayScore();
+            return Integer.compare(totalScore2, totalScore1);
+        });
+
+        return Collections.unmodifiableList(matches);
     }
 
     public void startMatch(String homeTeam, String awayTeam) {
